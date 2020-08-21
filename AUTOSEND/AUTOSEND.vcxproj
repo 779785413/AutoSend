@@ -212,11 +212,14 @@
   <ItemGroup>
     <None Include="..\..\..\..\开发软件\spy++\g.cur" />
     <None Include="res\AUTOSEND.rc2" />
+    <None Include="res\g.cur" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\开发软件\spy++\shoot1.ico" />
     <Image Include="..\..\..\..\开发软件\spy++\shoot2.ico" />
     <Image Include="res\AUTOSEND.ico" />
+    <Image Include="res\shoot1.ico" />
+    <Image Include="res\shoot2.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

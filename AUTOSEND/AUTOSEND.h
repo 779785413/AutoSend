@@ -23,7 +23,7 @@ public:
 // 重写
 public:
 	virtual BOOL InitInstance();
-
+	
 // 实现
 
 	DECLARE_MESSAGE_MAP()

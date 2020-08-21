@@ -63,6 +63,9 @@
     <None Include="..\..\..\..\开发软件\spy++\g.cur">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="res\g.cur">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\AUTOSEND.ico">
@@ -72,6 +75,12 @@
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="..\..\..\..\开发软件\spy++\shoot2.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shoot1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\shoot2.ico">
       <Filter>资源文件</Filter>
     </Image>
   </ItemGroup>

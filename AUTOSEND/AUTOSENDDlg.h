@@ -19,7 +19,7 @@ public:
 	CMy_ICON my_icon;
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
-
+	virtual void OnOK();
 
 // 实现
 protected:
@@ -31,4 +31,13 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnEnChangeMfceditbrowse1();
+	afx_msg void OnBnClickedButton3();
+	CString FileSelect;
+	HWND CatchHWnd;
+	afx_msg void OnBnClickedButton4();
+	afx_msg void OnBnClickedButton1();
+	
+	afx_msg void OnEnChangeEdit1();
 };

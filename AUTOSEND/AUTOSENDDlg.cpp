@@ -65,6 +65,11 @@ BEGIN_MESSAGE_MAP(CAUTOSENDDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_EN_CHANGE(IDC_MFCEDITBROWSE1, &CAUTOSENDDlg::OnEnChangeMfceditbrowse1)
+	ON_BN_CLICKED(IDC_BUTTON3, &CAUTOSENDDlg::OnBnClickedButton3)
+	ON_BN_CLICKED(IDC_BUTTON4, &CAUTOSENDDlg::OnBnClickedButton4)
+	ON_BN_CLICKED(IDC_BUTTON1, &CAUTOSENDDlg::OnBnClickedButton1)
+	ON_EN_CHANGE(IDC_EDIT1, &CAUTOSENDDlg::OnEnChangeEdit1)
 END_MESSAGE_MAP()
 
 
@@ -152,101 +157,138 @@ HCURSOR CAUTOSENDDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-void set_file(){
+
+
+void CAUTOSENDDlg::OnEnChangeMfceditbrowse1()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，它将不
+	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+
+	// TODO:  在此添加控件通知处理程序代码
+}
+
+
+void CAUTOSENDDlg::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
 	CFileDialog open_img(TRUE,
-	NULL,
-	NULL,
-	OFN_OVERWRITEPROMPT,
-	NULL,
-	NULL);
-	CEdit *MyEdit = (CEdit *)GetDlgItem(IDC_EDIT1);
+		NULL,
+		NULL,
+		OFN_OVERWRITEPROMPT,
+		NULL,
+		NULL);
+	CEdit* MyEdit = (CEdit*)GetDlgItem(IDC_EDIT1);
+	
 	if (open_img.DoModal() == IDOK)
 	{
-		MyEdit->SetSel(0,-1);
+		
+		MyEdit->SetSel(0, -1);
 		MyEdit->ReplaceSel(_T(""));
 		FileSelect = open_img.GetPathName();
-		CEdit *FileNameEdit = (CEdit *)GetDlgItem(IDC_EDIT2);
+		CEdit* FileNameEdit = (CEdit*)GetDlgItem(IDC_EDIT2);
 		FileNameEdit->SetWindowTextW(FileSelect);
 		CStdioFile file;
-		if (!file.open(FileSelect,Cfile:modeReadWrite)){
-			FileSelect = ""；
+		if (!file.Open(FileSelect, CFile::modeReadWrite)) {
+			FileSelect = "";
+			
 			return;
 		}
 		CString Content;
-		while (file.ReadString(Content)){
-			MyEdit->SetSel(MyEdit->GetWindowTextLenth(),MyEdit->GetWindowTextLenth());
+		while (file.ReadString(Content)) {
+			MyEdit->SetSel(MyEdit->GetWindowTextLengthW(), MyEdit->GetWindowTextLengthW());
 			MyEdit->ReplaceSel(Content + L"\r\n");
 		}
-		file.close();
-	} else {
+		file.Close();
+	}
+	else {
 		FileSelect = "";
+	}
+}
+
+
+void CAUTOSENDDlg::OnBnClickedButton4()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CEdit* p = (CEdit*)GetDlgItem(IDC_EDIT1);
+	int LineCount = p->GetLineCount();
+	LPTSTR ls = new TCHAR[1000];
+	CStdioFile file;
+	if (FileSelect == "")
+	{
+		CFileDialog Folder(FALSE, NULL, NULL, OFN_OVERWRITEPROMPT| OFN_CREATEPROMPT| OFN_READONLY, _T("*.txt|*.txt||"), NULL);
+		if (Folder.DoModal() != IDOK) {
+			return;
+		}
+		FileSelect = Folder.GetPathName();
+		CEdit* FileNameEdit = (CEdit*)GetDlgItem(IDC_EDIT2);
+		FileNameEdit->SetWindowTextW(FileSelect);
+		if (file.Open(FileSelect, CFile::modeCreate) == FALSE)
+		{
+			return;
+		}
+		file.Close();
+	}
+	if (file.Open(FileSelect, CFile::modeReadWrite) == FALSE)
+	{
+		return;
 	}
 	CString Content;
 	p->GetWindowText(Content);
 	Content.Remove('\r');
 	file.WriteString(Content);
-	file.close();
-	
+	file.Close();
 }
-void sendcmd(){
-	CEdit *p = (CEdit *)GetDlgItem(IDC_EDIT1);
+
+void CAUTOSENDDlg::OnBnClickedButton1()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CEdit* p = (CEdit*)GetDlgItem(IDC_EDIT1);
 	int cpxy;
 	POINT cp = GetCaretPos();
 	cpxy = p->CharFromPos(cp);
 	int row = HIWORD(cpxy);
 	int n = p->LineLength(-1);
 	LPTSTR ls = new TCHAR[n];
-	
-	p->GetLine(row,ls,n);
+
+	p->GetLine(row, ls, n);
 	if (CatchHWnd == NULL || (!IsWindow(CatchHWnd)))
 	{
 		return;
 	}
-	for (int i = 0; i< n;i++)
+	for (int i = 0; i < n; i++)
 	{
-		::SendMessage(CatchHWnd,WM_CHAR,ls[i],0);
-		Sleep(0.1);
+		::SendMessage(CatchHWnd, WM_CHAR, ls[i], 0);
+		//Sleep(0.2);
 	}
-	Sleep(0.1);
-	::SendMessage(CatchHWnd,WM_IME_KEYDOWN,VKRETURN,0);
-	Sleep(0.1);
+	Sleep(0.5);
+	::SendMessage(CatchHWnd, WM_IME_KEYDOWN, VK_RETURN, 0);
+	::SendMessage(CatchHWnd, WM_IME_KEYDOWN, VK_RETURN, 0);
 	int TextLength = 0;
 	for (int i = 0; i <= row; i++)
 	{
 		TextLength += p->LineLength(p->LineIndex(i)) + 2;
 	}
-		TextLength += p->LineLength(p->LineIndex(row + 1));
-		p->SetFocus();
-		p->SetSel(TextLength,TextLength);
+	TextLength += p->LineLength(p->LineIndex(row + 1));
+	p->SetFocus();
+	p->SetSel(TextLength, TextLength);
 }
-void savefile(){
-	CEdit *p = (CEdit *)GetDlgItem(IDC_EDIT1);
-	int LineCount = p->GetLineCount();
-	LPTSTR ls = new TCHAR[1000];
-	CStdioFile file;
-	if (FileSelect == "")
+void CAUTOSENDDlg::OnOK()
+{
+	if (GetDlgItem(IDOK) == GetFocus())
 	{
-		CFileDialog Folder(FALSE,NULL,NULL,OFN_OVERWRITEPROMPT,_T("*.txt|*.txt||"),NULL);
-		if(Folder.DoModal()!=IDOK){
-			return;
-		}
-		FileSelect = Folder.GetPathName();
-		CEdit *FileNameEdit = (CEdit *)GetDlgItem(IDC_EDIT2);
-		FileNameEdit->SetWindowTextW(FileSelect);
-		if(file.Open(FileSelect,CFile::modeCreate)==FALSE)
-		{
-			return;
-		}
-		file.close()
+		CDialog::OnOK();
 	}
-	if(file.Open(FileSelect,CFile::modeCreate)==FALSE)
-	{
-		return;
-	}
-	CString Content;
-	p->GetWindowText(Content);
-	Content.Remove('\r');
-	file.WriteString(Content);
-	file.close();
+	//handle enter key
 }
 
+void CAUTOSENDDlg::OnEnChangeEdit1()
+{
+	// TODO:  如果该控件是 RICHEDIT 控件，它将不
+	// 发送此通知，除非重写 CDialogEx::OnInitDialog()
+	// 函数并调用 CRichEditCtrl().SetEventMask()，
+	// 同时将 ENM_CHANGE 标志“或”运算到掩码中。
+
+	// TODO:  在此添加控件通知处理程序代码
+}

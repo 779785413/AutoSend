@@ -32,6 +32,6 @@ void CMy_ICON::OnLButtonUp(UINT nFlags, CPoint point)
 	HICON hicon2 = LoadIcon(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_ICON1));  this->SetIcon(hicon2);
 	POINT pnt;
 	::GetCursorPos(&pnt);
-	gSendDlg->CatchHwnd = ::WindowFromPoint(pnt);
+	gSendDlg->CatchHWnd = ::WindowFromPoint(pnt);
 	CStatic::OnLButtonUp(nFlags, point);
 }

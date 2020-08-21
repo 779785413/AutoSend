@@ -6,6 +6,7 @@
 #include "framework.h"
 #include "AUTOSEND.h"
 #include "AUTOSENDDlg.h"
+#include <locale.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -73,11 +74,10 @@ BOOL CAUTOSENDApp::InitInstance()
 
 	CAUTOSENDDlg dlg;
 	dlg.FileSelect= "";
-	dlg.Checked = FALSE;
 	dlg.CatchHWnd = NULL;
 	m_pMainWnd = &dlg;
 	gSendDlg = &dlg;
-	setlocale(.LC_CTYPE,"chs");
+	setlocale(LC_CTYPE,"chs");
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
@@ -109,4 +109,5 @@ BOOL CAUTOSENDApp::InitInstance()
 	//  而不是启动应用程序的消息泵。
 	return FALSE;
 }
+
 
