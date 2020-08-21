@@ -152,4 +152,101 @@ HCURSOR CAUTOSENDDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
+void set_file(){
+	CFileDialog open_img(TRUE,
+	NULL,
+	NULL,
+	OFN_OVERWRITEPROMPT,
+	NULL,
+	NULL);
+	CEdit *MyEdit = (CEdit *)GetDlgItem(IDC_EDIT1);
+	if (open_img.DoModal() == IDOK)
+	{
+		MyEdit->SetSel(0,-1);
+		MyEdit->ReplaceSel(_T(""));
+		FileSelect = open_img.GetPathName();
+		CEdit *FileNameEdit = (CEdit *)GetDlgItem(IDC_EDIT2);
+		FileNameEdit->SetWindowTextW(FileSelect);
+		CStdioFile file;
+		if (!file.open(FileSelect,Cfile:modeReadWrite)){
+			FileSelect = ""；
+			return;
+		}
+		CString Content;
+		while (file.ReadString(Content)){
+			MyEdit->SetSel(MyEdit->GetWindowTextLenth(),MyEdit->GetWindowTextLenth());
+			MyEdit->ReplaceSel(Content + L"\r\n");
+		}
+		file.close();
+	} else {
+		FileSelect = "";
+	}
+	CString Content;
+	p->GetWindowText(Content);
+	Content.Remove('\r');
+	file.WriteString(Content);
+	file.close();
+	
+}
+void sendcmd(){
+	CEdit *p = (CEdit *)GetDlgItem(IDC_EDIT1);
+	int cpxy;
+	POINT cp = GetCaretPos();
+	cpxy = p->CharFromPos(cp);
+	int row = HIWORD(cpxy);
+	int n = p->LineLength(-1);
+	LPTSTR ls = new TCHAR[n];
+	
+	p->GetLine(row,ls,n);
+	if (CatchHWnd == NULL || (!IsWindow(CatchHWnd)))
+	{
+		return;
+	}
+	for (int i = 0; i< n;i++)
+	{
+		::SendMessage(CatchHWnd,WM_CHAR,ls[i],0);
+		Sleep(0.1);
+	}
+	Sleep(0.1);
+	::SendMessage(CatchHWnd,WM_IME_KEYDOWN,VKRETURN,0);
+	Sleep(0.1);
+	int TextLength = 0;
+	for (int i = 0; i <= row; i++)
+	{
+		TextLength += p->LineLength(p->LineIndex(i)) + 2;
+	}
+		TextLength += p->LineLength(p->LineIndex(row + 1));
+		p->SetFocus();
+		p->SetSel(TextLength,TextLength);
+}
+void savefile(){
+	CEdit *p = (CEdit *)GetDlgItem(IDC_EDIT1);
+	int LineCount = p->GetLineCount();
+	LPTSTR ls = new TCHAR[1000];
+	CStdioFile file;
+	if (FileSelect == "")
+	{
+		CFileDialog Folder(FALSE,NULL,NULL,OFN_OVERWRITEPROMPT,_T("*.txt|*.txt||"),NULL);
+		if(Folder.DoModal()!=IDOK){
+			return;
+		}
+		FileSelect = Folder.GetPathName();
+		CEdit *FileNameEdit = (CEdit *)GetDlgItem(IDC_EDIT2);
+		FileNameEdit->SetWindowTextW(FileSelect);
+		if(file.Open(FileSelect,CFile::modeCreate)==FALSE)
+		{
+			return;
+		}
+		file.close()
+	}
+	if(file.Open(FileSelect,CFile::modeCreate)==FALSE)
+	{
+		return;
+	}
+	CString Content;
+	p->GetWindowText(Content);
+	Content.Remove('\r');
+	file.WriteString(Content);
+	file.close();
+}
 

@@ -8,7 +8,7 @@ BEGIN_MESSAGE_MAP(CMy_ICON, CStatic)
 	ON_WM_LBUTTONUP()
 END_MESSAGE_MAP()
 
-
+extern CAUTOSENDDlg *gSendDlg;
 void CMy_ICON::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
@@ -30,5 +30,8 @@ void CMy_ICON::OnLButtonUp(UINT nFlags, CPoint point)
 	ReleaseCapture();
 
 	HICON hicon2 = LoadIcon(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_ICON1));  this->SetIcon(hicon2);
+	POINT pnt;
+	::GetCursorPos(&pnt);
+	gSendDlg->CatchHwnd = ::WindowFromPoint(pnt);
 	CStatic::OnLButtonUp(nFlags, point);
 }

@@ -18,7 +18,7 @@ BEGIN_MESSAGE_MAP(CAUTOSENDApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
 END_MESSAGE_MAP()
 
-
+CAUTOSENDDlg *gSendDlg;
 // CAUTOSENDApp 构造
 
 CAUTOSENDApp::CAUTOSENDApp()
@@ -72,7 +72,12 @@ BOOL CAUTOSENDApp::InitInstance()
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
 	CAUTOSENDDlg dlg;
+	dlg.FileSelect= "";
+	dlg.Checked = FALSE;
+	dlg.CatchHWnd = NULL;
 	m_pMainWnd = &dlg;
+	gSendDlg = &dlg;
+	setlocale(.LC_CTYPE,"chs");
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
