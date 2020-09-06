@@ -262,9 +262,9 @@ void CAUTOSENDDlg::OnBnClickedButton1()
 		::SendMessage(CatchHWnd, WM_CHAR, ls[i], 0);
 		//Sleep(0.2);
 	}
-	Sleep(0.5);
+	Sleep(1);
 	::SendMessage(CatchHWnd, WM_IME_KEYDOWN, VK_RETURN, 0);
-	::SendMessage(CatchHWnd, WM_IME_KEYDOWN, VK_RETURN, 0);
+	//::SendMessage(CatchHWnd, WM_IME_KEYDOWN, VK_RETURN, 0);
 	int TextLength = 0;
 	for (int i = 0; i <= row; i++)
 	{
